@@ -1,5 +1,5 @@
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-// import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { env } from '@/env';
 import * as schema from './schema';
 import postgres from 'postgres';
 
@@ -8,12 +8,16 @@ declare global {
 }
 let database: PostgresJsDatabase<typeof schema>;
 let pg: ReturnType<typeof postgres>;
-if (process.env.NODE_ENV === 'production') {
-  database = drizzle(postgres(process.env.DATABASE_URL!), { schema });
+
+if (env.NODE_ENV === 'production') {
+  pg = postgres(env.DATABASE_URL);
+  database = drizzle(pg, { schema });
 } else {
   if (!global.database) {
-    global.database = drizzle(postgres(process.env.DATABASE_URL!), { schema });
+    pg = postgres(env.DATABASE_URL);
+    global.database = drizzle(pg, { schema });
   }
   database = global.database;
 }
+
 export { database, pg };
