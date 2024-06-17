@@ -4,16 +4,14 @@ import { bids as bidsSchema } from '@/app/db/schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { revalidatePath } from 'next/cache';
-import { SignIn } from '@/components/sign-in';
 import { auth } from '@/auth';
-import { SignOut } from '@/components/sign-out';
+import { LoginLink, LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 
 export default async function HomePage() {
   const bids = await database.query.bids.findMany();
   const session = await auth();
   return (
     <main className=' container mx-auto py-12'>
-      {session ? <SignOut /> : <SignIn />}
       <form
         action={async (formData: FormData) => {
           'use server';
