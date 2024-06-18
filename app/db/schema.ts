@@ -1,15 +1,11 @@
 import {
-  boolean,
   timestamp,
   pgTable,
   text,
-  primaryKey,
-  integer,
   serial,
+  doublePrecision,
 } from 'drizzle-orm/pg-core';
-import postgres from 'postgres';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import type { AdapterAccountType } from 'next-auth/adapters';
+import { sql } from 'drizzle-orm';
 
 // const connectionString = 'postgres://postgres:postgres@localhost:5432/drizzle';
 // const pool = postgres(connectionString, { max: 1 });
@@ -106,4 +102,7 @@ export const items = pgTable('bidly_items', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   userId: text('userId').notNull(),
+  startingPrice: doublePrecision('startingPrice')
+    .default(sql`'10.10'::double precision`)
+    .notNull(),
 });

@@ -6,6 +6,15 @@ import {
 import Image from 'next/image';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export async function Header() {
   const { isAuthenticated, getUser } = getKindeServerSession();
@@ -14,7 +23,7 @@ export async function Header() {
   return (
     <header>
       <nav className='bg-gray-200 nav container'>
-        <div className='container flex justify-between'>
+        <div className='container flex justify-between py-4 items-center'>
           <>
             <Link
               className='flex items-center gap-2 text-xl hover:underline'
@@ -30,38 +39,54 @@ export async function Header() {
             </Link>
 
             {!(await isAuthenticated()) ? (
-              <>
-                <LoginLink
-                  className='btn btn-ghost sign-in-btn'
-                  postLoginRedirectURL='/'
-                >
-                  Sign in
-                </LoginLink>
-                <RegisterLink className='btn btn-dark' postLoginRedirectURL='/'>
-                  Sign up
-                </RegisterLink>
-              </>
+              <div className='flex gap-2'>
+                <Button>
+                  <LoginLink
+                    className='btn btn-ghost sign-in-btn'
+                    postLoginRedirectURL='/'
+                  >
+                    Sign in
+                  </LoginLink>
+                </Button>
+                <Button>
+                  <RegisterLink
+                    className='btn btn-dark'
+                    postLoginRedirectURL='/'
+                  >
+                    Sign up
+                  </RegisterLink>
+                </Button>
+              </div>
             ) : (
-              <div>
-                {user?.picture ? (
-                  <Image
-                    className='avatar'
-                    src={user?.picture}
-                    alt='user profile avatar'
-                    referrerPolicy='no-referrer'
-                    width='50'
-                    height='50'
-                  />
-                ) : (
-                  <div className='avatar'>
-                    {user?.given_name?.[0]}
-                    {user?.family_name?.[0]}
-                  </div>
-                )}
-                <p className='text-heading-2'>
-                  {user?.given_name} {user?.family_name}
-                </p>
-                <LogoutLink className='text-subtle'>Sign out</LogoutLink>
+              <div className='flex flex-col items-center'>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    {user?.picture ? (
+                      <Image
+                        className='avata rounded-full'
+                        src={user?.picture}
+                        alt='user profile avatar'
+                        referrerPolicy='no-referrer'
+                        width='50'
+                        height='50'
+                      />
+                    ) : (
+                      <div className='avatar'>
+                        {user?.given_name?.[0]}
+                        {user?.family_name?.[0]}
+                      </div>
+                    )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <Link href='/items/create'>Auction an Item</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <LogoutLink className='text-subtle'>Sign out</LogoutLink>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </>
