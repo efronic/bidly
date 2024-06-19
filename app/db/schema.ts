@@ -102,6 +102,7 @@ export const items = pgTable('bidly_items', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   userId: text('userId').notNull(),
+  fileKey: text('fileKey').notNull(),
   startingPrice: doublePrecision('startingPrice')
     .default(sql`'10.10'::double precision`)
     .notNull(),
