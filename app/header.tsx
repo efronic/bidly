@@ -79,9 +79,13 @@ export async function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem>
-                      <Link href='/items/create'>Auction an Item</Link>
+                      <Link href='/items/create'>Create Auction</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href='/auctions'>My Auctions</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
+
                     <DropdownMenuItem>
                       <LogoutLink className='text-subtle'>Sign out</LogoutLink>
                     </DropdownMenuItem>

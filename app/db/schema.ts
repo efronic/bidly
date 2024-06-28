@@ -4,6 +4,7 @@ import {
   text,
   serial,
   doublePrecision,
+  integer,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -100,12 +101,18 @@ export const bids = pgTable('bidly_bids', {
 });
 export const items = pgTable('bidly_items', {
   id: serial('id').primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
-  userId: text('userId').notNull(),
   fileKey: text('fileKey').notNull(),
+  currentBid: integer('currentBid').default(0).notNull(),
   startingPrice: doublePrecision('startingPrice')
     .default(sql`'10.10'::double precision`)
     .notNull(),
+  bidInterval: integer('bidInterval').default(100).notNull(),
+  onDate: timestamp('onDate', { mode: 'date' }).notNull(),
 });
 
 export type Item = typeof items.$inferSelect;
+export type User = typeof users.$inferSelect;

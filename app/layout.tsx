@@ -29,7 +29,7 @@ export default async function RootLayout({
         )}
       >
         <Header />
-        <main>{children}</main>
+        <main className='container mx-auto py-12'>{children}</main>
       </body>
     </html>
   );
