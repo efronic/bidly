@@ -17,17 +17,16 @@ export default function HomePage() {
 
           const uploadUrl = await createUploadUrlAction(file.name, file.type);
 
-          const uploadFormData = new FormData();
+          await fetch(uploadUrl, {
+            method: 'PUT',
+            body: file,
+          });
+
           const name = formData.get('name') as string;
           const startingPrice = parseFloat(
             formData.get('startingPrice') as string
           );
-          uploadFormData.append('file', file);
-          await fetch(uploadUrl, {
-            method: 'PUT',
-            body: uploadFormData,
-            headers: { 'content-type': file.type },
-          });
+
           await createItemAction({
             fileName: file.name,
             name,

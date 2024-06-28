@@ -107,3 +107,5 @@ export const items = pgTable('bidly_items', {
     .default(sql`'10.10'::double precision`)
     .notNull(),
 });
+
+export type Item = typeof items.$inferSelect;
