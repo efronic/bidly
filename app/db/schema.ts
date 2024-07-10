@@ -16,7 +16,7 @@ import { sql } from 'drizzle-orm';
 export const users = pgTable('bidly_user', {
   id: text('id')
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .notNull(),
   name: text('name'),
   email: text('email').notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
@@ -111,7 +111,7 @@ export const items = pgTable('bidly_items', {
     .default(sql`'10.10'::double precision`)
     .notNull(),
   bidInterval: integer('bidInterval').default(100).notNull(),
-  onDate: timestamp('onDate', { mode: 'date' }).notNull(),
+  onDate: timestamp('onDate', { mode: 'date' }),
 });
 
 export type Item = typeof items.$inferSelect;

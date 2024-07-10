@@ -20,6 +20,9 @@ export async function Header() {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const user = await getUser();
 
+
+  console.log('efron ahmadifar user', user);
+
   return (
     <header>
       <nav className='bg-gray-200 nav container'>
@@ -43,7 +46,7 @@ export async function Header() {
                 <Button>
                   <LoginLink
                     className='btn btn-ghost sign-in-btn'
-                    postLoginRedirectURL='/'
+                    postLoginRedirectURL='/register'
                   >
                     Sign in
                   </LoginLink>
@@ -51,7 +54,7 @@ export async function Header() {
                 <Button>
                   <RegisterLink
                     className='btn btn-dark'
-                    postLoginRedirectURL='/'
+                    postLoginRedirectURL='/register'
                   >
                     Sign up
                   </RegisterLink>
