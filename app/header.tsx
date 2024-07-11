@@ -76,7 +76,7 @@ export async function Header() {
                     ) : (
                       <div className='avatar'>
                         {user?.given_name?.[0]}
-                        {user?.family_name?.[0]}
+                        {user?.family_name?.[0]}  
                       </div>
                     )}
                   </DropdownMenuTrigger>

@@ -6,6 +6,11 @@ import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getImageUrl } from '@/utils/files';
+import { formatDistance } from 'date-fns';
+
+function formatTimestamp(timestamp: Date) {
+  return formatDistance(timestamp, new Date(), { addSuffix: true });
+}
 
 export default async function ItemPage({
   params: { itemId },
@@ -46,12 +51,12 @@ export default async function ItemPage({
             height={400}
           />
           <div>
-            Starting Price of{' '}
+            Starting Price of
             <span className='bold'>${item.startingPrice}</span>
           </div>
         </div>
+        <div>Hello</div>
       </div>
-      <div></div>
     </main>
   );
 }

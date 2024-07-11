@@ -17,7 +17,7 @@ export default async function MyAuctionPage() {
   });
 
   const foundAuctions = allMyItems.length > 0;
-  console.log('efron ahmadifar ', foundAuctions);
+  // console.log('efron ahmadifar ', foundAuctions);
 
   return (
     <main className='space-y-8'>
