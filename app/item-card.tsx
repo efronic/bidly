@@ -16,7 +16,7 @@ export function ItemCard({ item }: { item: Item }) {
       <h2 className='text-xl font-bold'>{item.name}</h2>
       <p className='text-lg'>starting price: ${item.startingPrice}</p>
       <Button asChild>
-        <Link href={`/items/${item.id}`}>Place Bid</Link>
+        <Link href={`/items/${item.id}`}>Place A Bid</Link>
       </Button>
     </div>
   );

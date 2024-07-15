@@ -6,7 +6,7 @@ import {
   doublePrecision,
   integer,
 } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 // const connectionString = 'postgres://postgres:postgres@localhost:5432/drizzle';
 // const pool = postgres(connectionString, { max: 1 });
@@ -14,24 +14,13 @@ import { sql } from 'drizzle-orm';
 // export const db = drizzle(pool);
 
 export const users = pgTable('bidly_user', {
-  id: text('id')
-    .primaryKey()
-    .notNull(),
-  name: text('name'),
+  id: text('id').primaryKey().notNull(),
+  name: text('name').notNull(),
   email: text('email').notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
 });
 
-export const bids = pgTable('bidly_bids', {
-  id: serial('id').primaryKey(),
-  name: text('name'),
-  // user_id: 'integer',
-  // auction_id: 'integer',
-  // amount: 'integer',
-  // created_at: 'timestamp',
-  // updated_at: 'timestamp',
-});
 export const items = pgTable('bidly_items', {
   id: serial('id').primaryKey(),
   userId: text('userId')
@@ -44,8 +33,33 @@ export const items = pgTable('bidly_items', {
     .default(sql`'10.10'::double precision`)
     .notNull(),
   bidInterval: integer('bidInterval').default(100).notNull(),
-  onDate: timestamp('onDate', { mode: 'date' }),
+  endDate: timestamp('endDate', { mode: 'date' }).notNull(),
 });
+
+export const bids = pgTable('bidly_bids', {
+  id: serial('id').primaryKey(),
+  amount: integer('amount').notNull(),
+  itemId: serial('itemId')
+    .notNull()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  timestamp: timestamp('timestamp', { mode: 'date' }).notNull(),
+});
+
+export const usersRelations = relations(bids, ({ one }) => ({
+  users: one(users, { fields: [bids.userId], references: [users.id] }),
+}));
 
 export type Item = typeof items.$inferSelect;
 export type User = typeof users.$inferSelect;
+export type Bid = typeof bids.$inferSelect;
+// export type BidWithUser = {
+//   id: number;
+//   amount: number;
+//   itemId: number;
+//   userId: string;
+//   timestamp: Date;
+//   user: User;
+// };

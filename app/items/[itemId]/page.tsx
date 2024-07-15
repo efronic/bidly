@@ -7,6 +7,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getImageUrl } from '@/utils/files';
 import { formatDistance } from 'date-fns';
+import { getItemByItemId } from '@/data-access/items';
+import { getBidsByItemId } from '@/data-access/bids';
+import { isBidOver } from '@/utils/bids';
+import { Badge } from '@/components/ui/badge';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createBidAction } from './actions';
 
 function formatTimestamp(timestamp: Date) {
   return formatDistance(timestamp, new Date(), { addSuffix: true });
@@ -17,9 +23,10 @@ export default async function ItemPage({
 }: {
   params: { itemId: string };
 }) {
-  const item = await database.query.items.findFirst({
-    where: eq(items.id, Number(itemId)),
-  });
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  const item = await getItemByItemId(Number(itemId));
 
   if (!item) {
     return (
@@ -36,13 +43,24 @@ export default async function ItemPage({
       </div>
     );
   }
+
+  const allBids = await getBidsByItemId(Number(itemId));
+  const hasBids = allBids.length > 0;
+  const canPlaceBid = true;// item?.userId !== user?.id && !isBidOver(item);
+
   return (
-    <main className='container mx-auto py-12 space-y-8'>
+    <main className='space-y-8'>
       <div className='flex gap-8'>
-        <div>
+        <div className='flex flex-col gap-6'>
           <h1 className={pageTitleStyles}>
             <span className='font-normal'>Auction for</span> {item.name}
           </h1>
+          {isBidOver(item) && (
+            <Badge className='w-fit' variant='destructive'>
+              Bidding Over
+            </Badge>
+          )}
+
           <Image
             className='rounded-xl'
             src={getImageUrl(item.fileKey)}
@@ -50,12 +68,63 @@ export default async function ItemPage({
             width={400}
             height={400}
           />
-          <div>
-            Starting Price of
-            <span className='bold'>${item.startingPrice}</span>
+          <div className='text-xl space-y-4'>
+            <div>
+              Current Bid
+              <span className='font-bold'>${item.currentBid}</span>
+            </div>
+            <div>
+              Starting Price of
+              <span className='font-bold'>${item.startingPrice}</span>
+            </div>
+            <div>
+              Bid Interval
+              <span className='font-bold'>${item.bidInterval}</span>
+            </div>
           </div>
         </div>
-        <div>Hello</div>
+
+        <div className='space-y-4 flex-1'>
+          <div className='flex justify-between'>
+            <h2 className='text-2xl font-bold'>Current Bids</h2>
+            {canPlaceBid && (
+              <form action={createBidAction.bind(null, item.id)}>
+                <Button>Place a Bid</Button>
+              </form>
+            )}
+          </div>
+
+          {hasBids ? (
+            <ul className='space-y-4'>
+              {allBids.map((bid) => (
+                <li key={bid.id} className='bg-gray-100 rounded-xl p-8'>
+                  <div className='flex gap-4'>
+                    <div>
+                      <span className='font-bold'>${bid.amount}</span>
+                      by <span className='font-bold'>{bid.users.name}</span>
+                    </div>
+                    <div className=''>{formatTimestamp(bid.timestamp)}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className='flex flex-col items-center gap-8 bg-gray-100 rounded-xl p-12'>
+              <Image
+                src='/package.svg'
+                width='200'
+                height='200'
+                alt='Package'
+              />
+              <h2 className='text-2xl font-bold'>No bids yet</h2>
+              {canPlaceBid && (
+                <form action={createBidAction.bind(null, item.id)}>
+                  <Button>Place a Bid</Button>
+                </form>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
