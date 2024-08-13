@@ -27,6 +27,7 @@ export async function createItemAction({
       userId: user?.id,
       fileKey: fileName,
       startingPrice,
+      endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     })
     .execute();
   redirect('/');
