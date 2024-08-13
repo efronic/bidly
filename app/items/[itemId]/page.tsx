@@ -1,8 +1,5 @@
-import { database } from '@/app/db/database';
-import { items } from '@/app/db/schema';
 import { Button } from '@/components/ui/button';
 import { pageTitleStyles } from '@/styles';
-import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getImageUrl } from '@/utils/files';
@@ -70,16 +67,16 @@ export default async function ItemPage({
           />
           <div className='text-xl space-y-4'>
             <div>
-              Current Bid
-              <span className='font-bold'>${item.currentBid}</span>
+              Current Bid 
+              <span className='font-bold'> ${item.currentBid}</span>
             </div>
             <div>
               Starting Price of
-              <span className='font-bold'>${item.startingPrice}</span>
+              <span className='font-bold'> ${item.startingPrice}</span>
             </div>
             <div>
               Bid Interval
-              <span className='font-bold'>${item.bidInterval}</span>
+              <span className='font-bold'> ${item.bidInterval}</span>
             </div>
           </div>
         </div>
@@ -100,7 +97,7 @@ export default async function ItemPage({
                 <li key={bid.id} className='bg-gray-100 rounded-xl p-8'>
                   <div className='flex gap-4'>
                     <div>
-                      <span className='font-bold'>${bid.amount}</span>
+                      <span className='font-bold'>${bid.amount} </span>
                       by <span className='font-bold'>{bid.users.name}</span>
                     </div>
                     <div className=''>{formatTimestamp(bid.timestamp)}</div>

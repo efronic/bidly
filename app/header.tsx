@@ -1,10 +1,11 @@
+'use client';
 import {
   LoginLink,
   RegisterLink,
   LogoutLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 import Image from 'next/image';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +16,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  NotificationCell,
+  NotificationFeedPopover,
+  NotificationIconButton,
+} from "@knocklabs/react";
+import { useRef, useState } from 'react';
 
-export async function Header() {
-  const { isAuthenticated, getUser } = getKindeServerSession();
-  const user = await getUser();
-
+export function Header() {
+  const { user, getUser } = useKindeBrowserClient();
+  const { isAuthenticated } = useKindeBrowserClient();
+  const [isVisible, setIsVisible] = useState(false);
+  const notifButtonRef = useRef(null);
 
   console.log('efron ahmadifar user', user);
 
@@ -41,7 +49,7 @@ export async function Header() {
               Bidly
             </Link>
 
-            {!(await isAuthenticated()) ? (
+            {!isAuthenticated ? (
               <div className='flex gap-2'>
                 <Button>
                   <LoginLink
@@ -59,9 +67,36 @@ export async function Header() {
                     Sign up
                   </RegisterLink>
                 </Button>
+
               </div>
             ) : (
-              <div className='flex flex-col items-center'>
+              <div className='flex gap-3 items-center'>
+                <NotificationIconButton
+                  ref={notifButtonRef}
+                  onClick={(e) => setIsVisible(!isVisible)}
+                />
+                <NotificationFeedPopover
+                  buttonRef={notifButtonRef}
+                  isVisible={isVisible}
+                  onClose={() => setIsVisible(false)}
+                  renderItem={({ item, ...props }) => (
+                    <NotificationCell {...props} item={item}>
+                      <div className="rounded-xl">
+                        <Link
+                          className="text-blue-400 hover:text=blue-500"
+                          onClick={() => {
+                            setIsVisible(false);
+                          }}
+                          href={`/items/${item?.data?.itemId}`}
+                        >
+                          Someone outbidded you on{" "}
+                          <span className="font-bold">{item?.data?.itemName}</span>{" "}
+                          by ${item?.data?.bidAmount}
+                        </Link>
+                      </div>
+                    </NotificationCell>
+                  )}
+                />
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     {user?.picture ? (
@@ -76,7 +111,7 @@ export async function Header() {
                     ) : (
                       <div className='avatar'>
                         {user?.given_name?.[0]}
-                        {user?.family_name?.[0]}  
+                        {user?.family_name?.[0]}
                       </div>
                     )}
                   </DropdownMenuTrigger>
@@ -94,6 +129,7 @@ export async function Header() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
               </div>
             )}
           </>

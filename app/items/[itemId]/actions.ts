@@ -6,9 +6,13 @@ import { updateItemWithLatestBid } from '@/data-access/items';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { Knock } from "@knocklabs/node";
+import { env } from '@/env';
+
+const knock = new Knock(env.KNOCK_SECRET_KEY);
+
 
 export async function createBidAction(itemId: number) {
-  console.log('im here');
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -50,6 +54,25 @@ export async function createBidAction(itemId: number) {
         email: bid.users.email,
       });
     }
+  }
+  console.log('efron place bid', recipients)
+  if (recipients && recipients.length > 0) {
+    console.log('efron place bid recipients', user.id,user.given_name,user.email)
+    await knock.workflows.trigger("user-placed-bid", {
+      actor: {
+        id: user.id,
+        name: user.given_name ?? "Anonymous",
+        email: user.email,
+        collection: "users",
+      },
+      recipients,
+      data: {
+        itemId,
+        bidAmount: lastBidValue,
+        itemName: item.name,
+      },
+    });
+
   }
   revalidatePath(`/items/${itemId}`);
 }

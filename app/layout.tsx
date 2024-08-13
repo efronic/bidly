@@ -5,6 +5,7 @@ import './globals.css';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Header } from './header';
+import { AppKnockProvider } from './knock-provider';
 
 const fontDosis = FontDosis({
   subsets: ['latin'],
@@ -28,8 +29,10 @@ export default async function RootLayout({
           fontDosis.variable
         )}
       >
-        <Header />
-        <main className='container mx-auto py-12'>{children}</main>
+        <AppKnockProvider>
+          <Header />
+          <main className='container mx-auto py-12'>{children}</main>
+        </AppKnockProvider>
       </body>
     </html>
   );
