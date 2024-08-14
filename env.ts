@@ -18,7 +18,6 @@ export const env = createEnv({
     KINDE_POST_LOGIN_REDIRECT_URL: z.string().url(),
     AUTH_GOOGLE_ID: z.string().min(1),
     AUTH_GOOGLE_SECRET: z.string().min(1),
-    // AUTH_DRIZZLE_URL: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_BUCKET_URL: z.string().url(),
@@ -45,6 +44,5 @@ export const env = createEnv({
     KINDE_POST_LOGIN_REDIRECT_URL: process.env.KINDE_POST_LOGIN_REDIRECT_URL,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
-    // AUTH_DRIZZLE_URL: process.env.AUTH,
   },
 });

@@ -7,7 +7,6 @@ export async function createBid(bid: Omit<Bid, 'id'>) {
 }
 
 export async function getBidsForUser(userId: string) {
-  console.log('userId', userId);
   return await database.query.bids.findMany({ where: eq(bids.userId, userId) });
 }
 

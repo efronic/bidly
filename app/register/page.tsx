@@ -6,7 +6,6 @@ import { Register } from './actions';
 export function RegisterPage() {
   useEffect(() => {
     async function runRegister() {
-      console.log('Registering...');
       await Register();
     }
     runRegister();

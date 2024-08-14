@@ -8,10 +8,6 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
-// const connectionString = 'postgres://postgres:postgres@localhost:5432/drizzle';
-// const pool = postgres(connectionString, { max: 1 });
-
-// export const db = drizzle(pool);
 
 export const users = pgTable('bidly_user', {
   id: text('id').primaryKey().notNull(),
@@ -55,11 +51,3 @@ export const usersRelations = relations(bids, ({ one }) => ({
 export type Item = typeof items.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Bid = typeof bids.$inferSelect;
-// export type BidWithUser = {
-//   id: number;
-//   amount: number;
-//   itemId: number;
-//   userId: string;
-//   timestamp: Date;
-//   user: User;
-// };

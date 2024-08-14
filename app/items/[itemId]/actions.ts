@@ -22,7 +22,6 @@ export async function createBidAction(itemId: number) {
   const item = await database.query.items.findFirst({
     where: eq(items.id, itemId),
   });
-  console.log('item', item);
   
   if (!item) throw new Error('Item not found');
   if (isBidOver(item))
@@ -37,7 +36,6 @@ export async function createBidAction(itemId: number) {
   };
 
   await createBid(newBid);
-  //   return newBid;
 
   await updateItemWithLatestBid(itemId, lastBidValue);
   const currentBids = await getBidsByItemId(itemId);
@@ -60,9 +58,7 @@ export async function createBidAction(itemId: number) {
       });
     }
   }
-  console.log('efron place bid', recipients)
   if (recipients && recipients.length > 0) {
-    console.log('efron place bid recipients', user.id, user.given_name, user.email)
     await knock.workflows.trigger("user-placed-bid", {
       actor: {
         id: user.id,

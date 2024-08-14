@@ -43,7 +43,7 @@ export default async function ItemPage({
 
   const allBids = await getBidsByItemId(Number(itemId));
   const hasBids = allBids.length > 0;
-  const canPlaceBid = true;// item?.userId !== user?.id && !isBidOver(item);
+  const canPlaceBid = true;
 
   return (
     <main className='space-y-8'>

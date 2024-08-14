@@ -29,8 +29,6 @@ export function Header() {
   const [isVisible, setIsVisible] = useState(false);
   const notifButtonRef = useRef(null);
 
-  console.log('efron ahmadifar user', user);
-
   return (
     <header>
       <nav className='bg-gray-200 nav container'>
