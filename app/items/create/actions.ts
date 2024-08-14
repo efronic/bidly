@@ -10,10 +10,12 @@ export async function createItemAction({
   fileName,
   name,
   startingPrice,
+  endDate
 }: {
   fileName: string;
   name: string;
   startingPrice: number;
+  endDate: Date;
 }) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -27,7 +29,7 @@ export async function createItemAction({
       userId: user?.id,
       fileKey: fileName,
       startingPrice,
-      endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      endDate,
     })
     .execute();
   redirect('/');

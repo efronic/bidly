@@ -8,6 +8,7 @@ import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { Knock } from "@knocklabs/node";
 import { env } from '@/env';
+import { isBidOver } from '@/utils/bids';
 
 const knock = new Knock(env.KNOCK_SECRET_KEY);
 
@@ -22,7 +23,11 @@ export async function createBidAction(itemId: number) {
     where: eq(items.id, itemId),
   });
   console.log('item', item);
+  
   if (!item) throw new Error('Item not found');
+  if (isBidOver(item))
+    throw new Error('This auction is already over.')
+
   const lastBidValue = item.currentBid + item.bidInterval;
   const newBid = {
     itemId: item.id,
@@ -57,7 +62,7 @@ export async function createBidAction(itemId: number) {
   }
   console.log('efron place bid', recipients)
   if (recipients && recipients.length > 0) {
-    console.log('efron place bid recipients', user.id,user.given_name,user.email)
+    console.log('efron place bid recipients', user.id, user.given_name, user.email)
     await knock.workflows.trigger("user-placed-bid", {
       actor: {
         id: user.id,
